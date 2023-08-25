@@ -1,11 +1,11 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
-	"version": "1.0.0",
+	"id": "brain-assistant",
+	"name": "Brain Assistant",
+	"version": "1.0.2",
 	"minAppVersion": "0.15.0",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "This PlugIn allows you to chat against your documents with an AI like ChatGPT. However, it is based on aleph alpha so you don't need to worry about your data",
+	"author": "Maxim Perl",
+	"authorUrl": "https://github.com/perledition",
+	"fundingUrl": "https://py.pl/Sz1s5",
 	"isDesktopOnly": false
 }

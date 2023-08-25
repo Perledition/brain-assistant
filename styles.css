@@ -6,3 +6,178 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+.chatWrapper {
+    padding: 5px;
+}
+.chatWindow {
+    height: 78vh;
+    border-bottom: 1px solid gray;
+    overflow-y: scroll;
+}
+.promptWindow {
+  max-height: 10vh;
+  position: absolute;
+  width: 95%;
+  bottom: 5vh;
+}
+
+.inputContainer {
+  padding: 5px;
+  display: block;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  width: 95%;
+  justify-content: space-between;
+}
+
+.promptInput {
+  flex: 1; /* Take available space */
+  resize: none;
+  min-width: 80%;
+  margin-right: 5px;
+  height: 3vh;
+  padding: 8px; /* Adjust as needed */
+}
+
+.sendButton {
+  height: 3vh;
+  border: none;
+  color: var(--text-accent);
+}
+
+.sendButton img {
+  color: var(--text-accent);
+}
+
+.responseBox {
+  text-indent: 0;
+  list-style-type: none;
+  list-style: 0;
+  margin-left: 0;
+  width: 100%;
+  background-color: var(--background-primary-alt);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.responseBoxHeader {
+  background-color: var(--background-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.responseBoxHeaderText {
+  flex: 1;
+  text-align: left;
+  margin-left: 5px;
+}
+
+.responseBoxHeaderIcon {
+  fill: var(--text-accent);
+}
+
+.responseBoxBody {
+  padding: 8px;
+  min-height: 50px;
+}
+
+.responseBoxFooter {
+  padding-left: 8px;
+  padding-right:8px;
+  padding-bottom:4px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.sendIcon {
+  fill: var(--text-accent);
+}
+
+.clipboardIcon {
+  position: flex;
+  top: 0;
+  right: 20px;
+}
+
+.typing {
+    position: relative;
+}
+
+.typing span {
+    content: '';
+    animation: blink 1.5s infinite;
+    animation-fill-mode: both;
+    height: 10px;
+    width: 10px;
+    background: var(--text-accent);
+    position: absolute;
+    left:0;
+    top:0;
+    border-radius: 50%;
+}
+
+.typing span:nth-child(2) {
+    animation-delay: .2s;
+    margin-left: 10px * 1.5;
+}
+    
+.typing span:nth-child(3) {
+    animation-delay: .4s;
+    margin-left: 10px * 3;
+}
+
+.responseList {
+  width: 100%;
+  list-style: 0;
+  margin-left: 0;
+  overflow-y: hidden;
+  padding: 0;
+}
+  
+.responseList li {
+  margin-bottom: 35px;
+  padding-left: 0;
+  text-indent: 0;
+  margin-left: 0;
+}
+
+/* Hide the default scrollbar */
+.chatWindow::-webkit-scrollbar {
+  width: 0.5em; /* Set the width of the scrollbar track */
+}
+
+.chatWindow::-webkit-scrollbar-thumb {
+  background-color: var(--background-secondary); /* Color of the scrollbar thumb */
+  border-radius: 0.25em; /* Rounded corners for the thumb */
+}
+
+.chatWindow::-webkit-scrollbar-track {
+  background-color: var(--background-secondary); /* Color of the scrollbar track */
+}
+
+/* Show the thumb when user interacts */
+.chatWindow:hover::-webkit-scrollbar-thumb {
+  background-color: var(--background-secondary);
+}
+
+.hide {
+  display: none;
+}
+
+
+@keyframes blink {
+0% {
+    opacity: .1;
+}
+20% {
+    opacity: 1;
+}
+100% {
+    opacity: .1;
+}
+}
