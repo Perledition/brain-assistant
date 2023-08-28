@@ -11,6 +11,7 @@ import { estimateRemainingBudget } from "components/budget";
 import { DEFAULT_BRAIN_ASSISTANT_SETTINGS, VIEW_TYPE_BRAIN_ASSISTANT } from "global";
 import { getBudgetText } from "components/utils";
 import { BrainAssistantView } from "components/view";
+import { BrainAssistantPluginSettings } from "components/interfaces/setttings";
 
 export let VECTOR_DB: LocalIndex;
 

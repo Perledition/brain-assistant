@@ -1,5 +1,6 @@
 import { LocalIndex, MetadataTypes, QueryResult } from "vectra";
 import { answerResponse, embeddingReponse, embeddingsReponse } from "./interfaces/alpha_alpha";
+import { AlephAlphaLog, BrainAssistantPluginSettings } from "./interfaces/setttings";
 
 export class AlephAlpha {
 	baseUrl: string;

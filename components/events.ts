@@ -3,6 +3,7 @@ import { AlephAlpha } from "./aleph_alpha";
 import { estimateRemainingBudget } from "./budget";
 import { MarkdownFileReader } from "./file_reader";
 import { generateUUID, getBudgetText } from "./utils";
+import { BrainAssistantPluginSettings } from "./interfaces/setttings";
 
 
 /**

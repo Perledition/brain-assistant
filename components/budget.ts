@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { compareDates } from './utils';
-import { AlephAlpha } from './aleph_alpha';
+import { AlephAlphaLog, BrainAssistantPluginSettings, BudgetLogData } from './interfaces/setttings';
 
 
 /**
