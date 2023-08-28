@@ -1,10 +1,10 @@
-interface BrainAssistantPluginSettings {
+export interface BrainAssistantPluginSettings {
 	Token: string;
 	Budget: number;
 	VaultPath: string;
 }
 
-interface AlephAlphaLog {
+export interface AlephAlphaLog {
 	create_timestamp: string;
 	model_name: string;
 	request_type: string;
@@ -15,7 +15,7 @@ interface AlephAlphaLog {
 	credits: number;
 }
 
-interface BudgetLogData {
+export interface BudgetLogData {
 	budgetDate: string;
 	logs: AlephAlphaLog[];
 }
