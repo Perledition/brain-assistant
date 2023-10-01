@@ -1,6 +1,6 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 
-import  BrainAssistantPlugin from "main";
+import BrainAssistantPlugin from "main";
 import { writeFixPointToDisk } from "./budget";
 
 export class BrainAssistantPluginSettingTab extends PluginSettingTab {
@@ -32,19 +32,6 @@ export class BrainAssistantPluginSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName("Vault Path")
-			.setDesc("REQUIRED: This is the Folder Path to your Vault.")
-			.addText((text) =>
-				text
-					.setPlaceholder("/home/user/Obsidian")
-					.setValue(this.plugin.settings.VaultPath)
-					.onChange(async (value) => {
-						this.plugin.settings.VaultPath = value;
-						await this.plugin.saveSettings();
-					})
-			);
-
-		new Setting(containerEl)
 			.setName("Budget")
 			.setDesc(
 				"OPTIONAL: If you know your Credit Budget you can enter it here to have a better spend overview"
@@ -54,11 +41,11 @@ export class BrainAssistantPluginSettingTab extends PluginSettingTab {
 					.setPlaceholder("0")
 					.setValue(this.plugin.settings.Budget.toString())
 					.onChange(async (value) => {
-
 						// add a datetime to log_data.json, so it considers only data from this date on and ignores all other dates
-						const settings = this.plugin.settings;
-						writeFixPointToDisk(settings)
-						this.plugin.settings.Budget = parseInt(value.toString());
+						// writeFixPointToDisk(settings)
+						this.plugin.settings.Budget = parseInt(
+							value.toString()
+						);
 						await this.plugin.saveSettings();
 					})
 			);

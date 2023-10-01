@@ -1,6 +1,15 @@
+import {
+	AlephAlphaLog,
+	BrainAssistantPluginSettings,
+} from "./interfaces/setttings";
 import { LocalIndex, MetadataTypes, QueryResult } from "vectra";
-import { answerResponse, embeddingReponse, embeddingsReponse } from "./interfaces/alpha_alpha";
-import { AlephAlphaLog, BrainAssistantPluginSettings } from "./interfaces/setttings";
+import {
+	answerResponse,
+	embeddingResponse,
+	embeddingsResponse,
+} from "./interfaces/alpha_alpha";
+
+import fetch from "node-fetch";
 
 export class AlephAlpha {
 	baseUrl: string;
@@ -18,37 +27,42 @@ export class AlephAlpha {
 	 * @param text array with text
 	 * @returns embeedings for each text in size 128
 	 */
-	async embed(text: string[]): Promise<embeddingsReponse> {
-		const axios = require("axios");
-		let data = JSON.stringify({
+	async embed(text: string[]): Promise<embeddingsResponse> {
+		const data = JSON.stringify({
 			model: "luminous-base",
 			prompts: text,
 			representation: "symmetric",
 			compress_to_size: 128,
 		});
 
-		let config = {
-			method: "post",
-			maxBodyLength: Infinity,
-			url: this.baseUrl + "/batch_semantic_embed",
+		const requestOptions = {
+			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
 				Authorization: `Bearer ${this.settings.Token}`,
 			},
-			data: data,
+			body: data,
 		};
 
-		let result = await axios(config)
-			.then((response: any) => response.data)
-			.then((response: embeddingsReponse) => {
-				return response;
-			})
-			.catch((error: any) => {
-				console.log(error);
-				return { model_version: "error", embeddings: [[]] };
-			});
-		return result;
+		try {
+			const response = await fetch(
+				`${this.baseUrl}/batch_semantic_embed`,
+				requestOptions
+			);
+
+			if (!response.ok) {
+				throw new Error(
+					`Request failed with status: ${response.status}`
+				);
+			}
+
+			const responseData: embeddingsResponse = await response.json();
+			return responseData;
+		} catch (error) {
+			console.error(error);
+			return { model_version: "error", embeddings: [[]] };
+		}
 	}
 
 	/**
@@ -61,31 +75,41 @@ export class AlephAlpha {
 		query: string;
 		documents: { text: string }[];
 	}): Promise<answerResponse> {
-		const axios = require("axios");
-		let data = JSON.stringify(setup);
+		const data = JSON.stringify(setup);
 
-		let config = {
-			method: "post",
-			maxBodyLength: Infinity,
-			url: this.baseUrl + "/qa",
+		const requestOptions = {
+			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
 				Authorization: `Bearer ${this.settings.Token}`,
 			},
-			data: data,
+			body: data,
 		};
 
-		let result = await axios(config)
-			.then((response: any) => response.data)
-			.then((response: answerResponse) => {
-				return response;
-			})
-			.catch((error: any) => {
-				console.log(`Found Error in generating aleph alpha answer: ${error}`);
-				return {answers: [{answer: "no answer could be generated. Error in Request"}]};
-			});
-		return result;
+		try {
+			const response = await fetch(`${this.baseUrl}/qa`, requestOptions);
+
+			if (!response.ok) {
+				throw new Error(
+					`Request failed with status: ${response.status}`
+				);
+			}
+
+			const responseData: answerResponse = await response.json();
+			return responseData;
+		} catch (error) {
+			console.error(
+				`Found Error in generating aleph alpha answer: ${error}`
+			);
+			return {
+				answers: [
+					{
+						answer: "no answer could be generated. Error in Request",
+					},
+				],
+			};
+		}
 	}
 
 	/**
@@ -93,28 +117,32 @@ export class AlephAlpha {
 	 * @returns an array of log data from aleph alpha
 	 */
 	async requestSpend(): Promise<AlephAlphaLog[]> {
-		const axios = require("axios");
-
-		let config = {
-			method: "get",
-			maxBodyLength: Infinity,
-			url: "https://api.aleph-alpha.com/users/me/requests",
+		const requestOptions = {
+			method: "GET",
 			headers: {
 				Accept: "application/json",
 				Authorization: `Bearer ${this.settings.Token}`,
 			},
 		};
 
-		let result = await axios(config)
-			.then((response: any) => {
-				return response.data;
-			})
-			.catch((error: any) => {
-				console.log(error);
-				return [];
-			});
-		
-		return result
+		try {
+			const response = await fetch(
+				"https://api.aleph-alpha.com/users/me/requests",
+				requestOptions
+			);
+
+			if (!response.ok) {
+				throw new Error(
+					`Request failed with status: ${response.status}`
+				);
+			}
+
+			const responseData: AlephAlphaLog[] = await response.json();
+			return responseData;
+		} catch (error) {
+			console.error(error);
+			return [];
+		}
 	}
 
 	/**
@@ -125,44 +153,53 @@ export class AlephAlpha {
 	async query(
 		text: string
 	): Promise<QueryResult<Record<string, MetadataTypes>>[]> {
-		const axios = require("axios");
-		let data = JSON.stringify({
+		const data = JSON.stringify({
 			model: "luminous-base",
 			prompt: text,
 			representation: "symmetric",
 			compress_to_size: 128,
 		});
 
-		let config = {
-			method: "post",
-			maxBodyLength: Infinity,
-			url: "https://api.aleph-alpha.com/semantic_embed",
+		const requestOptions = {
+			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				Accept: "application/json",
 				Authorization: `Bearer ${this.settings.Token}`,
 			},
-			data: data,
+			body: data,
 		};
+		console.log(this.vectorDB.listItems());
+		try {
+			const response = await fetch(
+				"https://api.aleph-alpha.com/semantic_embed",
+				requestOptions
+			);
 
-		let result = await axios(config)
-			.then((response: any) => response.data)
-			.then((response: embeddingReponse) => {
-				return response;
-			})
-			.catch((error: any) => {
-				console.log(`Found Error in quering the best documents: ${error}`);
-				return {answers: [{answer: "no answer could be generated. Error in Request"}]};
-			});
+			if (!response.ok) {
+				throw new Error(
+					`Request failed with status: ${response.status}`
+				);
+			}
 
-		const documentResults = await this.vectorDB.queryItems(
-			result.embedding,
-			3
-		);
+			const responseData: embeddingResponse = await response.json();
 
-		if (documentResults.length > 0) {
-			return documentResults;
-		} else {
+			const documentResults = await this.vectorDB.queryItems(
+				responseData.embedding,
+				3
+			);
+			console.log("items");
+			console.log(this.vectorDB.listItems());
+			console.log(documentResults);
+			if (documentResults.length !== undefined) {
+				return documentResults;
+			} else {
+				return [];
+			}
+		} catch (error) {
+			console.error(
+				`Found Error in querying the best documents: ${error}`
+			);
 			return [];
 		}
 	}

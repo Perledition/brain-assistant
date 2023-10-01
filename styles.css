@@ -94,6 +94,10 @@ If your plugin does not need CSS, delete this file.
   border-bottom-right-radius: 5px;
 }
 
+.responseBoxFooter a {
+  margin-right: 3px;
+}
+
 .sendIcon {
   fill: var(--text-accent);
 }

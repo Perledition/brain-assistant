@@ -1,19 +1,24 @@
 import * as path from "path";
 
-import { Plugin } from "obsidian";
+import {
+	DEFAULT_BRAIN_ASSISTANT_SETTINGS,
+	VIEW_TYPE_BRAIN_ASSISTANT,
+} from "global";
+import { FileSystemAdapter, Plugin } from "obsidian";
 
 import { AlephAlpha } from "components/aleph_alpha";
 import { BrainAssistantPluginSettingTab } from "components/settings";
+import { BrainAssistantPluginSettings } from "components/interfaces/setttings";
+import { BrainAssistantView } from "components/view";
 import { LocalIndex } from "vectra";
 import { MarkdownFileReader } from "components/file_reader";
 import { VectorDBItem } from "components/interfaces/vector_db_item";
 import { estimateRemainingBudget } from "components/budget";
-import { DEFAULT_BRAIN_ASSISTANT_SETTINGS, VIEW_TYPE_BRAIN_ASSISTANT } from "global";
 import { getBudgetText } from "components/utils";
-import { BrainAssistantView } from "components/view";
-import { BrainAssistantPluginSettings } from "components/interfaces/setttings";
 
 export let VECTOR_DB: LocalIndex;
+export let MANIFEST_DIR: string;
+export let BASE_PATH: string;
 
 export default class BrainAssistantPlugin extends Plugin {
 	sidebarIcon: HTMLSpanElement;
@@ -39,29 +44,34 @@ export default class BrainAssistantPlugin extends Plugin {
 		await this.loadSettings();
 		this.addSettingTab(new BrainAssistantPluginSettingTab(this.app, this));
 
-		VECTOR_DB = new LocalIndex(
-			path.join(
-				`${this.settings.VaultPath}/.obsidian/plugins/brain-assistant/vector/`,
-				"..",
-				"index"
-			)
-		);
+		if (this.app.vault.adapter instanceof FileSystemAdapter) {
+			BASE_PATH = this.app.vault.adapter.getBasePath();
+			MANIFEST_DIR = path.join(
+				this.app.vault.adapter.getBasePath(),
+				this.manifest.dir!!
+			);
 
-		
+			VECTOR_DB = new LocalIndex(
+				path.join(MANIFEST_DIR, "vector", "..", "index")
+			);
+		}
+
 		const item = this.addStatusBarItem();
-		const budgetLeft = await estimateRemainingBudget([], this.settings)
+		const budgetLeft = await estimateRemainingBudget(
+			[],
+			this.settings,
+			MANIFEST_DIR
+		);
 		item.createEl("a", {
 			text: getBudgetText(budgetLeft),
 			href: "",
-			attr: {id: "alephAlphaBudget"}
+			attr: { id: "alephAlphaBudget" },
 		});
 
 		this.aleph = new AlephAlpha(VECTOR_DB, this.settings);
 
-		this.reader = new MarkdownFileReader(
-			this.settings.VaultPath ?? "",
-			VECTOR_DB
-		);
+		const configDir = this.app.vault.configDir;
+		this.reader = new MarkdownFileReader(BASE_PATH, VECTOR_DB, configDir);
 
 		if (!(await VECTOR_DB.isIndexCreated())) {
 			await VECTOR_DB.createIndex();
@@ -69,15 +79,21 @@ export default class BrainAssistantPlugin extends Plugin {
 
 		this.updateRoutine();
 
-        // Listen to file modification
-        this.app.vault.on("modify", (file) => {
-            console.log(`File "${file.path}" has been modified.`);
-            this.updateRoutine();
-        });
+		// Listen to file modification
+		this.app.vault.on("modify", (file) => {
+			this.updateRoutine();
+		});
 
 		this.registerView(
 			VIEW_TYPE_BRAIN_ASSISTANT,
-			(leaf) => new BrainAssistantView(leaf, this.settings, VECTOR_DB)
+			(leaf) =>
+				new BrainAssistantView(
+					leaf,
+					this.settings,
+					VECTOR_DB,
+					MANIFEST_DIR,
+					BASE_PATH
+				)
 		);
 
 		this.addRibbonIcon("message-square", "Chat", () => {
@@ -105,18 +121,17 @@ export default class BrainAssistantPlugin extends Plugin {
 		(async () => {
 			const markdownContent = await this.reader.readAllMarkdownFiles();
 			if (markdownContent) {
-				console.log(markdownContent)
 				if (markdownContent.length > 0) {
 					const embeddings = await this.aleph.embed(
-						markdownContent.map((x) => { 
-							if (x.fileContent !== '') {
-								return x.fileContent
+						markdownContent.map((x) => {
+							if (x.fileContent !== "") {
+								return x.fileContent;
 							} else {
-								return 'EMPTY'
+								return "EMPTY";
 							}
 						})
 					);
-					
+
 					let dbContent = markdownContent.map((item, index) => {
 						return {
 							id: item.id,
@@ -127,12 +142,12 @@ export default class BrainAssistantPlugin extends Plugin {
 							},
 						};
 					});
-					this.addItems(dbContent);
+					await this.addItems(dbContent);
 				}
 			} else {
-				console.log("File not found or error occurred.");
+				console.error("File not found or error occurred.");
 			}
-		})();		
+		})();
 	}
 
 	async pushVector(item: VectorDBItem) {
@@ -141,25 +156,17 @@ export default class BrainAssistantPlugin extends Plugin {
 
 	async addItems(items: VectorDBItem[]) {
 		const updateTag = document.getElementsByClassName("updateDB")[0];
-		const inputContainer = document.getElementsByClassName("inputContainer")[0];
+		const inputContainer =
+			document.getElementsByClassName("inputContainer")[0];
 		inputContainer.addClass("hide");
 		updateTag.removeClass("hide");
-		
-		for (let i = 0; i < items.length; i++) {
+
+		for (let i in items) {
 			this.pushVector(items[i]);
 		}
-		
-		await VECTOR_DB.beginUpdate();
 
+		await VECTOR_DB.beginUpdate();
 		updateTag.addClass("hide");
 		inputContainer.removeClass("hide");
 	}
 }
-
-
-
-
-
-
-
-

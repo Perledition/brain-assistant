@@ -1,20 +1,19 @@
 export interface queryResponse {}
 
-export interface logResponse{}
+export interface logResponse {}
 
 export interface answerResponse {
-    answers: {
-        answer: string;
-    }[]
+	answers: {
+		answer: string;
+	}[];
 }
 
-export interface embeddingReponse{
-    model_version: string;
-    embeddings: number[]; 
+export interface embeddingResponse {
+	model_version: string;
+	embedding: number[];
 }
 
-
-export interface embeddingsReponse{
-    model_version: string;
-    embeddings: [number[]] 
+export interface embeddingsResponse {
+	model_version: string;
+	embeddings: [number[]];
 }

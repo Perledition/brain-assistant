@@ -3,9 +3,9 @@
 	"name": "Brain Assistant",
 	"version": "1.0.4",
 	"minAppVersion": "0.15.0",
-	"description": "This PlugIn allows you to chat against your documents with an AI like ChatGPT. However, it is based on aleph alpha so you don't need to worry about your data",
+	"description": "Allows to ask questions about the content in your vault with aleph alpha.",
 	"author": "Maxim Perl",
 	"authorUrl": "https://github.com/perledition",
 	"fundingUrl": "https://py.pl/Sz1s5",
-	"isDesktopOnly": false
+	"isDesktopOnly": true
 }

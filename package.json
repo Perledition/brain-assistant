@@ -1,7 +1,7 @@
 {
 	"name": "brain-assistant-plugin",
-	"version": "1.0.4",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"version": "1.0.5",
+	"description": "Allows to ask questions about the content in your vault with aleph alpha.",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",

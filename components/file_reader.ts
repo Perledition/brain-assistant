@@ -8,10 +8,12 @@ import { MetaData } from "./interfaces/metadata";
 export class MarkdownFileReader {
 	basePath: string;
 	vectorDB: LocalIndex;
+	configDir: string;
 
-	constructor(basePath: string, vectorDB: LocalIndex) {
+	constructor(basePath: string, vectorDB: LocalIndex, configDir: string) {
 		this.basePath = basePath;
 		this.vectorDB = vectorDB;
+		this.configDir = configDir;
 	}
 
 	/**
@@ -75,7 +77,7 @@ export class MarkdownFileReader {
 				);
 				const markdownFileHash =
 					markdownFiles[markdownFilesRelevantIndex].contentHash;
-				
+
 				if (markdownFileHash !== currentHashes[i]) {
 					markdownFiles[markdownFilesRelevantIndex].id =
 						currentIndexedFiles[i].id;
@@ -151,7 +153,7 @@ export class MarkdownFileReader {
 	) {
 		const files = await fs.promises.readdir(directoryPath);
 		for (const file of files) {
-			if (!directoryPath.includes(".obsidian")) {
+			if (!directoryPath.includes(this.configDir)) {
 				const filePath = path.join(directoryPath, file);
 				const stat = await fs.promises.stat(filePath);
 
