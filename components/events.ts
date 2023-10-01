@@ -1,10 +1,8 @@
-import { generateUUID, getBudgetText } from "./utils";
-
 import { AlephAlpha } from "./aleph_alpha";
 import { BrainAssistantPluginSettings } from "./interfaces/setttings";
 import { LocalIndex } from "vectra";
 import { MarkdownFileReader } from "./file_reader";
-import { estimateRemainingBudget } from "./budget";
+import { generateUUID } from "./utils";
 
 /**
  * Creates a text Box for a response for a query made by an user
@@ -135,10 +133,9 @@ export async function handleSend(
 		const footerDiv = container.getElementsByClassName(footerUUID)[0];
 		typingDiv.removeChild(loadingSpan);
 
-		const referenceTags = reference.map((path: string) => {
+		reference.forEach((path: string) => {
 			const fileName = path.split("/");
 			const fileWithoutMd = fileName[fileName.length - 1].split(".");
-			console.log("vaultName", basePath);
 			const vaultName = basePath.split("/");
 
 			const tag_anchor = container.createEl("a");
@@ -149,21 +146,6 @@ export async function handleSend(
 
 			footerDiv.appendChild(tag_anchor);
 		});
-
-		// request the last logs from alpeh alpha for the budget estimate
-		const spends = await httpClient.requestSpend();
-
-		// update the budget in the status bar
-		let budgetLeft = await estimateRemainingBudget(
-			spends,
-			settings,
-			basePath
-		);
-		const budgetLeftText = getBudgetText(budgetLeft);
-		const budgetTag = document.getElementById(
-			"alephAlphaBudget"
-		) as HTMLElement;
-		budgetTag.innerText = budgetLeftText;
 	} catch (error) {
 		console.error("An error occurred:", error);
 	}

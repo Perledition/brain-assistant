@@ -13,8 +13,6 @@ import { BrainAssistantView } from "components/view";
 import { LocalIndex } from "vectra";
 import { MarkdownFileReader } from "components/file_reader";
 import { VectorDBItem } from "components/interfaces/vector_db_item";
-import { estimateRemainingBudget } from "components/budget";
-import { getBudgetText } from "components/utils";
 
 export let VECTOR_DB: LocalIndex;
 export let MANIFEST_DIR: string;
@@ -55,18 +53,6 @@ export default class BrainAssistantPlugin extends Plugin {
 				path.join(MANIFEST_DIR, "vector", "..", "index")
 			);
 		}
-
-		const item = this.addStatusBarItem();
-		const budgetLeft = await estimateRemainingBudget(
-			[],
-			this.settings,
-			MANIFEST_DIR
-		);
-		item.createEl("a", {
-			text: getBudgetText(budgetLeft),
-			href: "",
-			attr: { id: "alephAlphaBudget" },
-		});
 
 		this.aleph = new AlephAlpha(VECTOR_DB, this.settings);
 

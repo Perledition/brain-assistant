@@ -5,25 +5,16 @@
  * @returns true if the first date is older, false otherwise
  */
 export function compareDates(dateStr1: string, dateStr2: string): boolean {
-    const date1 = new Date(dateStr1);
-    const date2 = new Date(dateStr2);
-  
-    if (date1 <= date2) {
-      return true
-    } else if (date1 > date2) {
-      return false
-    } else {
-      return false
-    }
-  }
+	const date1 = new Date(dateStr1);
+	const date2 = new Date(dateStr2);
 
-/**
- * Creates a budget text with a Decimal number
- * @param value decimal number like 0.21
- * @returns string tag with a value
- */
-export function getBudgetText(value: number) {
-  return `Aleph Alpha Budget: ${value.toFixed(2)}`
+	if (date1 <= date2) {
+		return true;
+	} else if (date1 > date2) {
+		return false;
+	} else {
+		return false;
+	}
 }
 
 /**

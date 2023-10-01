@@ -169,7 +169,6 @@ export class AlephAlpha {
 			},
 			body: data,
 		};
-		console.log(this.vectorDB.listItems());
 		try {
 			const response = await fetch(
 				"https://api.aleph-alpha.com/semantic_embed",
@@ -188,9 +187,6 @@ export class AlephAlpha {
 				responseData.embedding,
 				3
 			);
-			console.log("items");
-			console.log(this.vectorDB.listItems());
-			console.log(documentResults);
 			if (documentResults.length !== undefined) {
 				return documentResults;
 			} else {

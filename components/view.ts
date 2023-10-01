@@ -3,7 +3,6 @@ import { ItemView, Setting, WorkspaceLeaf } from "obsidian";
 import { BrainAssistantPluginSettings } from "./interfaces/setttings";
 import { LocalIndex } from "vectra";
 import { VIEW_TYPE_BRAIN_ASSISTANT } from "global";
-import { config } from "process";
 import { handleSend } from "./events";
 
 export class BrainAssistantView extends ItemView {
