@@ -1,7 +1,7 @@
 {
 	"id": "brain-assistant",
 	"name": "Brain Assistant",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"minAppVersion": "0.15.0",
 	"description": "Allows to ask questions about the content in your vault with aleph alpha.",
 	"author": "Maxim Perl",
